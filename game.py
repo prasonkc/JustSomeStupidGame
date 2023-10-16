@@ -14,14 +14,16 @@ pygame.display.set_icon(game_icon)
 # Set up starting position for player
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
+hammar = pygame.image.load("./Resources/hammar_up.png").convert_alpha()
+
 score = 0
 dt = 0
 
 col_detected = False
 
 # Spawn the bug randomly
-bug_x = random.randint(0, 720)
-bug_y = random.randint(0, 720)
+bug_x = random.randint(30, 670)
+bug_y = random.randint(30, 670)
 
 running = True
 
@@ -31,14 +33,15 @@ while running:
             running = False
 
     screen.fill("black")
-
-    player = pygame.draw.circle(screen, "red", player_pos, 40)
-
+    
     # Load the image in the game
-    img = pygame.image.load("./Resources/bug.png").convert()
-    bug = pygame.Rect(bug_x, bug_y, img.get_width(), img.get_height())
+    img = pygame.image.load("./Resources/bug.png").convert_alpha()
 
     screen.blit(img, (bug_x,bug_y))
+
+    # Draw the player
+    screen.blit(hammar, (player_pos.x, player_pos.y))
+
 
     # Programming the controls
     keys = pygame.key.get_pressed()
@@ -51,8 +54,6 @@ while running:
     if keys[pygame.K_RIGHT]:
         player_pos.x += 300 * dt
     if keys[pygame.K_SPACE]:
-        pygame.draw.circle(screen, "green", player_pos, 40)
-
         if not col_detected:
             distance = math.sqrt((player_pos.x - (bug_x + img.get_width() // 2))**2 + (player_pos.y - (bug_y + img.get_height() // 2))**2)
             # Detecting collisions with an object
@@ -61,8 +62,15 @@ while running:
                 score += 1
 
                 # Reset the position of the bug 
-                bug_x = random.randint(0, 720)
-                bug_y = random.randint(0, 720)
+                bug_x = random.randint(30, 670)
+                bug_y = random.randint(30, 670)
+                
+                hammar = pygame.image.load("./Resources/hammar_down.png").convert_alpha()
+    else:
+        hammar = pygame.image.load("./Resources/hammar_up.png").convert_alpha()
+        
+        
+
 
 
 
