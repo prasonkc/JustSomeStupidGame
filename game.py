@@ -39,10 +39,6 @@ while running:
 
     screen.blit(img, (bug_x,bug_y))
 
-    # Draw the player
-    screen.blit(hammar, (player_pos.x, player_pos.y))
-
-
     # Programming the controls
     keys = pygame.key.get_pressed()
     if keys[pygame.K_UP]:
@@ -68,11 +64,6 @@ while running:
                 hammar = pygame.image.load("./Resources/hammar_down.png").convert_alpha()
     else:
         hammar = pygame.image.load("./Resources/hammar_up.png").convert_alpha()
-        
-        
-
-
-
 
     # Reseting value for collission detected
     if not keys[pygame.K_SPACE]:
@@ -92,7 +83,40 @@ while running:
     font = pygame.font.Font(None, 36)
     score_text = font.render(f'Score: {score}', True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
-            
+
+    # Moving the enemy
+    bug_displacement = score/10
+    bug_y += bug_displacement
+    if bug_y > 670:
+        game_over_text = font.render(f'GAME OVER!', True, (255, 255, 255))
+        screen.blit(game_over_text, (500, 360))
+
+        # Rectangle parameters
+        x, y = 480, 410  # Position of the top-left corner of the rectangle
+        width, height = 200, 100  # Width and height of the rectangle
+        color = (0, 255, 0)  # RGB color 
+        rect = pygame.draw.rect(screen, color, (x, y, width, height))
+
+        replay_text = font.render("Replay!", True, (255,255,255))
+        screen.blit(replay_text, (520, 450))
+
+        if keys[pygame.K_SPACE]:
+            distance = math.sqrt((player_pos.x - (x + width // 2))**2 + (player_pos.y - (y + height// 2))**2)
+            if distance < 40 + max(width, height) / 2:
+                color = (255, 0, 0)
+                score = 0
+
+                screen.fill("black")
+                bug_x = random.randint(30, 670)
+                bug_y = random.randint(30, 670)
+                continue
+        
+
+
+        
+    # Draw the player
+    screen.blit(hammar, (player_pos.x, player_pos.y))
+
 
     # flip() the display to put your work on screen
     pygame.display.flip()
